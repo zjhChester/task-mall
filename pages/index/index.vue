@@ -10,7 +10,7 @@
 					<image style="width: 240px;height: 40px;"
 						src="http://cdn.zjhwork.xyz/vsfileserver/9409bcaaa2ec405498c8306a5cbbf2cd.png" mode=""></image>
 					<view class="" style="width: 300px;margin-left: 20px;font-size: 14px;">
-						<text style="position: absolute;top: 7%;">欢迎回来,今天也要继续加油哦~</text>
+						<text style="position: absolute;margin-top: -10%;">欢迎回来,今天也要继续加油哦~</text>
 					</view>
 				</view>
 			</view>
@@ -452,9 +452,6 @@
 		text-align: center;
 		width: 70px;
 		color: #adc9e1;
-		height: 70px;
-		line-height: 70px;
-		padding: 10px;
 	}
 
 	.year-month {
