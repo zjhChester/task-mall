@@ -7,11 +7,11 @@
 						src="http://cdn.zjhwork.xyz/vsfileserver/ea5dce87cf9142f2b3873a3f30ca5525.jpeg" mode=""></image>
 				</view>
 				<view class="" style="width: 30%;float: left;margin-top: 10%;">
-					<image style="width: 240px;height: 40px;"
-						src="http://cdn.zjhwork.xyz/vsfileserver/9409bcaaa2ec405498c8306a5cbbf2cd.png" mode=""></image>
-					<view class="" style="width: 300px;margin-left: 20px;font-size: 14px;">
+					<image style="width: 224px;height: 40px;"
+						src="http://cdn.zjhwork.xyz/vsfileserver/9fa98e9fe39c4cfaa2b2f29e317a35d6.png" mode=""></image>
+					<!-- <view class="" style="width: 300px;margin-left: 20px;font-size: 14px;">
 						<text style="position: absolute;margin-top: -10%;">欢迎回来,今天也要继续加油哦~</text>
-					</view>
+					</view> -->
 				</view>
 			</view>
 			<view class="" style="text-align: center;clear: both;margin-top: 10%;margin-bottom: 10%;">
@@ -21,7 +21,7 @@
 					v-text=" '¥'+ wallet"></text>
 			</view>
 		</view>
-		<view>
+		<view>..
 			<view class="text-area" v-for="(item, i) in tasks">
 				<uni-card style="border-radius: 15px;box-shadow: #DCDFE6 1px 1px 10px ;">
 					<view class="" style="width: 10%;float: left;margin-top: 3%;">
@@ -130,8 +130,7 @@
 							</view>
 						</view>
 					</view>
-					<scroll-view style="height: 100%;width: 80%;float: left;margin-left: 10%;" scroll-y="true">
-
+					<scroll-view style="height: 100%;max-height: 400px;width: 80%;float: left;margin-left: 10%;overflow-y: scroll;" scroll-y="true" >
 						<view style="">
 							<view class="" style="margin-right: 5%;">
 								<view style="margin-top: 30px;"></view>
