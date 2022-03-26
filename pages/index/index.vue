@@ -193,13 +193,13 @@
 						<text>明细</text>
 					</view>
 					<scroll-view
-						style="height: 100%;margin-top: 5%;max-height: 500px;width: 90%;margin-left: 5%;overflow-y: scroll;"
+						style="border-top: 0.5px #F1F1F1 solid;;height: 100%;margin-top: 5%;max-height: 500px;width: 90%;margin-left: 5%;overflow-y: scroll;"
 						scroll-y="true">
 						<view style="">
 							<view class="" style="margin-right: 5%;">
-								<view style="margin-top: 30px;"></view>
+								<view style=""></view>
 								<view class="" v-for="(item,i) in walletRecords" style="font-size: 15px;">
-									<view class="" v-if="item.type == 'PLUS'" style="margin-top: 5%;border-top: 0.5px #F1F1F1 solid;">
+									<view class="" v-if="item.type == 'PLUS'" style="margin-top: 5%;border-bottom: 0.5px #F1F1F1 solid;">
 										<view class="" style="width: 96%;">
 
 										</view>
@@ -208,7 +208,7 @@
 											<view class="">
 												<text v-text="item.taskName+item.causeBy"></text>
 											</view>
-											<view class="" style="font-size: 11px;margin-top: 5%;margin-left: 4%;">
+											<view class="" style="font-size: 11px;margin-top: 5%;margin-left: 4%;margin-bottom: 5px;">
 												<text v-text="new Date(item.createTime).toLocaleString()"></text>
 											</view>
 										</view>
@@ -222,7 +222,7 @@
 
 										</view>
 									</view>
-									<view class="" v-if="item.type == 'SUBTRACT'" style="border-top: 0.5px #F1F1F1 solid;margin-top: 5%;">
+									<view class="" v-if="item.type == 'SUBTRACT'" style="border-bottom: 0.5px #F1F1F1 solid;margin-top: 5%;">
 										<view class="" style="width: 96%;">
 
 										</view>
@@ -231,7 +231,7 @@
 											<view class="">
 												<text v-text="item.taskName+item.causeBy"></text>
 											</view>
-											<view class="" style="font-size: 11px;margin-top: 5%;margin-left: 4%;">
+											<view class="" style="font-size: 11px;margin-top: 5%;margin-left: 4%;margin-bottom: 5px;">
 												<text v-text="new Date(item.createTime).toLocaleString()"></text>
 											</view>
 										</view>
