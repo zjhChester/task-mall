@@ -25,13 +25,13 @@
 					<view class="" style="width: 10%;float: left;margin-top: 3%;">
 						<image :src="item.image" style="width: 40px;height: 40px;" mode=""></image>
 					</view>
-					<view class="" style="width: 70%;float: left;margin-top: 2%;margin-left: 3%;">
+					<view class="" style="width: 65%;float: left;margin-top: 2%;margin-left: 5%;">
 						<text v-text="item.taskName" style="font-weight: 600;font-size: 15px;"></text>
 						<view></view>
 						<text style="font-size: 12px;color: #A5A5A5;" v-text="item.taskDescription"></text>
 					</view>
 					<view class="" style="width: 10%;float: left;">
-						<view class="" style="color: #fadf85;font-weight: 800;margin-left: 15%;font-size: 16px;">
+						<view class="" style="color: #fadf85;font-weight: 800;font-size: 16px;">
 							<text v-text="'+'+item.amount.toFixed(2)"></text>
 						</view>
 						<view class="" style="margin-top: 13%;">
@@ -199,8 +199,8 @@
 							<view class="" style="margin-right: 5%;">
 								<view style="margin-top: 30px;"></view>
 								<view class="" v-for="(item,i) in walletRecords" style="font-size: 15px;">
-									<view class="" v-if="item.type == 'PLUS'">
-										<view class="" style="border-top: 0.5px #F1F1F1 solid;width: 96%;">
+									<view class="" v-if="item.type == 'PLUS'" style="margin-top: 5%;border-top: 0.5px #F1F1F1 solid;">
+										<view class="" style="width: 96%;">
 
 										</view>
 										<view class="" style="float: left;width: 80%; margin-top: 5%;">
@@ -208,7 +208,7 @@
 											<view class="">
 												<text v-text="item.taskName+item.causeBy"></text>
 											</view>
-											<view class="" style="font-size: 11px;margin-top: 5px;margin-left: 4%;">
+											<view class="" style="font-size: 11px;margin-top: 5%;margin-left: 4%;">
 												<text v-text="new Date(item.createTime).toLocaleString()"></text>
 											</view>
 										</view>
@@ -222,16 +222,16 @@
 
 										</view>
 									</view>
-									<view class="" v-if="item.type == 'SUBTRACT'">
-										<view class="" style="border-top: 0.5px #F1F1F1 solid;width: 96%;">
+									<view class="" v-if="item.type == 'SUBTRACT'" style="border-top: 0.5px #F1F1F1 solid;margin-top: 5%;">
+										<view class="" style="width: 96%;">
 
 										</view>
 										<view class="" style="float: left;width: 80%; margin-top: 5%;">
 
 											<view class="">
-												<text v-text="item.taskName+item.causeBy+'扣除'"></text>
+												<text v-text="item.taskName+item.causeBy"></text>
 											</view>
-											<view class="" style="font-size: 11px;margin-top: 5px;margin-left: 4%;">
+											<view class="" style="font-size: 11px;margin-top: 5%;margin-left: 4%;">
 												<text v-text="new Date(item.createTime).toLocaleString()"></text>
 											</view>
 										</view>
@@ -250,7 +250,7 @@
 
 						</view>
 					</scroll-view>
-					<uni-calendar ref="calendar" :insert="false" :clearDate="false" @change="loadWalletRecords(dateStr)"></uni-calendar>
+					<uni-calendar ref="calendar" :insert="false" :clearDate="false" @confirm="confirm"></uni-calendar>
 				</uni-drawer>
 				
 			</view>
