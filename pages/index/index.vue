@@ -1,5 +1,6 @@
 <template>
 	<view class="content">
+
 		<view>
 			<view class="">
 				<view class="" style="margin-left: 10%;margin-top: 20px;width: 20%;float: left;">
@@ -7,11 +8,8 @@
 						src="http://cdn.zjhwork.xyz/vsfileserver/ea5dce87cf9142f2b3873a3f30ca5525.jpeg" mode=""></image>
 				</view>
 				<view class="" style="width: 30%;float: left;margin-top: 10%;">
-					<image style="width: 224px;height: 40px;"
-						src="http://cdn.zjhwork.xyz/vsfileserver/9fa98e9fe39c4cfaa2b2f29e317a35d6.png" mode=""></image>
-					<!-- <view class="" style="width: 300px;margin-left: 20px;font-size: 14px;">
-						<text style="position: absolute;margin-top: -10%;">欢迎回来,今天也要继续加油哦~</text>
-					</view> -->
+					<image class="image-dialog" style="width: 224px;height: 40px;"
+						src="http://cdn.zjhwork.xyz/vsfileserver/b18ab05e96d441f4988769bff477e60e.png" mode=""></image>
 				</view>
 			</view>
 			<view class="" style="text-align: center;clear: both;margin-top: 10%;margin-bottom: 10%;">
@@ -21,7 +19,7 @@
 					v-text=" '¥'+ wallet"></text>
 			</view>
 		</view>
-		<view>..
+		<scroll-view scroll-y="true" style="max-height: 500px;overflow-y: scroll;">
 			<view class="text-area" v-for="(item, i) in tasks">
 				<uni-card style="border-radius: 15px;box-shadow: #DCDFE6 1px 1px 10px ;">
 					<view class="" style="width: 10%;float: left;margin-top: 3%;">
@@ -37,38 +35,57 @@
 							<text v-text="'+'+item.amount.toFixed(2)"></text>
 						</view>
 						<view class="" style="margin-top: 13%;">
-							<button type="primary" style="font-size: 13px;font-weight: 600;width: 65px;border: none;box-shadow: #A5A5A5 1px 1px 10px;border-radius: 10px;background-color: #69abf5;" size="mini"
-								@click="completeTask(item.id)">完成</button>
+							<button type="primary"
+								style="font-size: 13px;font-weight: 600;width: 65px;border: none;box-shadow: #A5A5A5 1px 1px 10px;border-radius: 10px;background-color: #69abf5;"
+								size="mini" @click="completeTask(item.id)">完成</button>
 						</view>
 					</view>
 					<view class="" style="clear: both;"></view>
 				</uni-card>
 			</view>
-		</view>
+		</scroll-view>
 		<view>
 			<uni-fab style="position: absolute;bottom: 15%;left: 5%;" :content="fabArr" @trigger="openFloat">
 			</uni-fab>
-			<uni-drawer ref="showLeft" mode="left">
-				<scroll-view style="height: 100%;" scroll-y="true">
-					<view class="" style="padding: 10%;">
-						<view class="">
-							<text style="font-size: small;color: #A5A5A5;" v-text="'这里是:'"></text>
-						</view>
-						<text style="font-size: 13px;font-weight: 600;" v-text="myProfile.nickname+'✨'"></text>
-						<view style="margin-top: 30px;"></view>
+			<uni-drawer ref="showLeft" mode="left" :width="300">
+				<view class=""
+					style="margin-top:20px;margin-left: 20px;margin-right: 20px;border-radius: 10px;box-shadow: #DCDCDC 1px 1px 12px;padding: 10px;background-color: #f9f9f9;"
+					@click="count++">
+					<view class="" style="width: 30%;float: left;">
+						<image style="width: 50px;height: 50px;border-radius: 50%;"
+							src="http://cdn.zjhwork.xyz/vsfileserver/2de56398eebb489ea3251b39c1d46e59.jpeg" mode="">
+						</image>
+					</view>
+					<view class="" style="width: 60%;float: left;margin-top: 10px;">
+						<text style="font-size: 13px;font-weight: 800;" v-text="myProfile.nickname+'✨'"></text>
+					</view>
+					<view class="" style="clear: both;font-size: 13px;width: 90%;">
+						<text v-text="'个人介绍:  开心得冒泡泡得橘子海~~~'"></text>
+					</view>
 
+				</view>
+
+				<view class="" style="clear: both;padding: 10%;">
+
+				</view>
+				<scroll-view style="height: 100%;max-height: 300px;overflow-y:scroll ;" scroll-y="true">
+
+					<view class="" v-for="(current, i) in audios " v-show="count%5==0">
+						<audio style="text-align: left" :src="current.src" :poster="current.poster" :name="current.name"
+							:author="current.author" controls></audio>
 					</view>
 
 				</scroll-view>
 			</uni-drawer>
 			<uni-drawer ref="showRight" mode="right" :width="400">
-				<image style="width: 70px;height: 70px;margin-left: 10%;cursor: pointer;" @click="closeMall"
-					src="http://cdn.zjhwork.xyz/vsfileserver/c712117a0b8b420681a36ee1c1c0e29d.png" mode=""></image>
-				<scroll-view style="height: 100%;" scroll-y="true">
+				<image style="margin-top: 30px;width: 20px;height: 20px;margin-left: 10%;cursor: pointer;"
+					@click="closeMall" src="../../static/back.png" mode=""></image>
+				<view class="center" style="margin: 0 auto;width: 80%;">
+					<text style="font-size: 30px;font-weight: 800;">Integral Mall</text>
+				</view>
+				<scroll-view style="height: 100%;max-height: 400px;overflow-y:scroll ;" scroll-y="true">
 					<view class="" style="width: 100%;">
-						<view class="center" style="margin: 0 auto;width: 80%;">
-							<text style="font-size: 30px;font-weight: 800;">Integral Mall</text>
-						</view>
+
 						<view class="" style="padding: 10%;">
 							<view class="center product" v-for="(item, i) in products" style="">
 								<image :src="item.image" style="width: 70px;height: 70px;"></image>
@@ -97,66 +114,148 @@
 
 			<view class="" style="">
 				<uni-drawer ref="showTop" mode="top" :width="400">
-					<view class="" style="margin-bottom: 20px;">
-						<image style="width: 70px;height: 70px;margin-left: 5%;cursor: pointer;" @click="closeMall"
-							src="http://cdn.zjhwork.xyz/vsfileserver/c712117a0b8b420681a36ee1c1c0e29d.png" mode="">
-						</image>
-						<view class="year-month">
-							<text v-text="dateFormatCN"></text>
-						</view>
-						<view class="day" @click="openCalendar">
-							<view class="day-cycle">
-								<text class="day-num" v-text="dateNum"></text>
+					<view class=""
+						style="padding: 15px;margin-top:20px;margin-right: 20px;margin-right: 20px;margin-left: 20px;width: 78%;border-radius: 10px;box-shadow: #DCDCDC 1px 1px 12px;background-color: #f9f9f9;">
+						<view class="" style="float: left;width: 25%;">
+							<view class="" style="margin: ;">
+								<image style="width: 50px;height: 50px;border-radius: 50%;margin-left: 13px;"
+									src="http://cdn.zjhwork.xyz/vsfileserver/2de56398eebb489ea3251b39c1d46e59.jpeg"
+									mode="">
+								</image>
+							</view>
+
+							<view class="" @click="openCalendar">
+								<view class=""
+									style="color: #141414;text-align: center;font-size: 13px;margin-top: 13px;">
+									<text v-text="dateFormatYear"></text>
+								</view>
+								<view class="" style="margin-top: 5px;font-size: 13px;">
+									<view class="" style="color: #141414;text-align: center;">
+										<text class="" v-text="dateFormatMonth+'-'+dateNum"></text>
+									</view>
+								</view>
 							</view>
 						</view>
-						<view class="" style="width: 70%;">
-							<uni-calendar :date="dateStr" ref="calendar" @confirm="confirm" :insert="false"
-								@change="change" />
+						<view class="" style="float: left;width: 25%;margin-left: 5%;">
+							<view class="">
+								<view class="">
+									<text style="font-size: 14px;color: #b0b0b0;">累计获得</text>
+								</view>
+								<view style="margin-top: 5px;">
+									<text v-text="walletInfo.amount.toFixed(2)"></text>
+								</view>
+							</view>
+							<view class="" style="margin-top: 20px;">
+								<view class="">
+									<text style="font-size: 14px;color: #b0b0b0;">今日获得</text>
+								</view>
+								<view style="margin-top: 5px;">
+									<text v-text="increaseAmount.toFixed(2)"></text>
+								</view>
+							</view>
+						</view>
+						<view class="" style="float: left;width: 19%;margin-left: 8%;">
+							<view class="">
+								<view class="">
+									<text style="font-size: 14px;color: #b0b0b0;">余额</text>
+								</view>
+								<view style="color: #f4cb45;margin-top: 5px;">
+									<text v-text="walletInfo.amount.toFixed(2)"></text>
+								</view>
+							</view>
+
+							<view class="" style="margin-top: 20px;">
+								<view class="">
+									<text style="font-size: 14px;color: #b0b0b0;">今日扣除</text>
+								</view>
+								<view style="margin-top: 5px;">
+									<text v-text="reduceAmount.toFixed(2)"></text>
+								</view>
+							</view>
+
+						</view>
+						<view class="" style="float: left;width: 3%;margin-left: 12%;">
+							<view class="">
+								<image style="width: 20px;height: 20px;margin-left: 5%;cursor: pointer;"
+									@click="closeMall" src="../../static/back2.png" mode="">
+								</image>
+							</view>
+
+						</view>
+						<view class="" style="clear: both;">
+
 						</view>
 					</view>
-					<view class="">
-						<view class="" style="float: left;width: 10%;">
-							<view class="" style="margin-top: 20px;color: #3b5eb9;">
-								<text class="amount-text" v-text="'+'+increaseAmount.toFixed(2)"></text>
-							</view>
-							<image style="margin-top: 20px;width: 80px;height: 80px;"
-								src="http://cdn.zjhwork.xyz/vsfileserver/a02d6dbb178d4b2da16974395c915129.png" mode="">
-							</image>
-							<image style="margin-top: 40px;width: 80px;height: 80px;"
-								src="http://cdn.zjhwork.xyz/vsfileserver/acb72192461b4061bb44f848b84e9765.png" mode="">
-							</image>
-							<view class="" style=";margin-top: 25px;color: #E43D33;">
-								<text class="amount-text" v-text="'-'+ reduceAmount.toFixed(2)"></text>
-							</view>
-						</view>
+					<view class="" style="margin-bottom: 20px;clear: both;">
+
 					</view>
-					<scroll-view style="height: 100%;max-height: 400px;width: 80%;float: left;margin-left: 10%;overflow-y: scroll;" scroll-y="true" >
+					<view class="" style="margin-left: 5%;margin-top: 10px;font-size: 20px;">
+						<text>明细</text>
+					</view>
+					<scroll-view
+						style="height: 100%;margin-top: 5%;max-height: 500px;width: 90%;margin-left: 5%;overflow-y: scroll;"
+						scroll-y="true">
 						<view style="">
 							<view class="" style="margin-right: 5%;">
 								<view style="margin-top: 30px;"></view>
-								<view class="" v-for="(item,i) in walletRecords" style="font-size: 8px;">
-									<uni-card v-if="item.type == 'PLUS'" >
-										<text
-											v-text="item.taskName+item.causeBy+'获得: '+item.amount.toFixed(2)+'💰'"></text>
-										<view style="text-align: right;font-size: 10px;">
-											<text v-text="new Date(item.createTime).toLocaleString()"></text>
+								<view class="" v-for="(item,i) in walletRecords" style="font-size: 15px;">
+									<view class="" v-if="item.type == 'PLUS'">
+										<view class="" style="border-top: 0.5px #F1F1F1 solid;width: 96%;">
+
 										</view>
-									</uni-card>
-									<uni-card v-if="item.type == 'SUBTRACT'">
-										<text style="color: #E43D33;" v-if="item.type == 'SUBTRACT'"
-											v-text="item.taskName+item.causeBy+'扣除: '+item.amount.toFixed(2)+'💰'"></text>
-										<view style="text-align: right;font-size: 10px;">
-											<text v-text="new Date(item.createTime).toLocaleString()"></text>
+										<view class="" style="float: left;width: 80%; margin-top: 5%;">
+
+											<view class="">
+												<text v-text="item.taskName+item.causeBy"></text>
+											</view>
+											<view class="" style="font-size: 11px;margin-top: 5px;margin-left: 4%;">
+												<text v-text="new Date(item.createTime).toLocaleString()"></text>
+											</view>
 										</view>
-									</uni-card>
+										<view class=""
+											style="float: left;width: 5%;margin-top: 8%;font-weight: 600;font-size: 15px;">
+											<view class="" style="color: #f4cb45;">
+												<text v-text="'+'+item.amount.toFixed(2)"></text>
+											</view>
+										</view>
+										<view class="" style="clear: both;">
+
+										</view>
+									</view>
+									<view class="" v-if="item.type == 'SUBTRACT'">
+										<view class="" style="border-top: 0.5px #F1F1F1 solid;width: 96%;">
+
+										</view>
+										<view class="" style="float: left;width: 80%; margin-top: 5%;">
+
+											<view class="">
+												<text v-text="item.taskName+item.causeBy+'扣除'"></text>
+											</view>
+											<view class="" style="font-size: 11px;margin-top: 5px;margin-left: 4%;">
+												<text v-text="new Date(item.createTime).toLocaleString()"></text>
+											</view>
+										</view>
+										<view class=""
+											style="float: left;width: 5%;margin-top: 8%;font-weight: 600;font-size: 15px;">
+											<view class="" style="color: #ea4035;">
+												<text v-text="'-'+item.amount.toFixed(2)"></text>
+											</view>
+										</view>
+										<view class="" style="clear: both;">
+
+										</view>
+									</view>
 								</view>
 							</view>
 
 						</view>
 					</scroll-view>
+					<uni-calendar ref="calendar" :insert="false" :clearDate="false" @change="loadWalletRecords(dateStr)"></uni-calendar>
 				</uni-drawer>
+				
 			</view>
 		</view>
+		
 	</view>
 </template>
 
@@ -169,10 +268,43 @@
 		},
 		data() {
 			return {
+				count: 1,
+				audios: [{
+						poster: 'https://bjetxgzv.cdn.bspapp.com/VKCEYUGU-uni-app-doc/7fbf26a0-4f4a-11eb-b680-7980c8a877b8.png',
+						name: '冒险',
+						author: 'zjh',
+						src: 'http://img.zjhwork.xyz/%E9%82%A3%E4%BA%9B%E4%BD%A0%E5%BE%88%E5%86%92%E9%99%A9%E7%9A%84%E6%A2%A6.aac',
+					},
+					{
+						poster: 'https://bjetxgzv.cdn.bspapp.com/VKCEYUGU-uni-app-doc/7fbf26a0-4f4a-11eb-b680-7980c8a877b8.png',
+						name: '🦙',
+						author: 'zjh',
+						src: 'http://img.zjhwork.xyz/%E7%99%BD%E7%BE%8A.aac',
+					},
+					{
+						poster: 'https://bjetxgzv.cdn.bspapp.com/VKCEYUGU-uni-app-doc/7fbf26a0-4f4a-11eb-b680-7980c8a877b8.png',
+						name: '❤️',
+						author: 'zjh',
+						src: 'http://img.zjhwork.xyz/%E6%85%A2%E6%85%A2%E5%96%9C%E6%AC%A2%E4%BD%A0.aac',
+					},
+					{
+						poster: 'https://bjetxgzv.cdn.bspapp.com/VKCEYUGU-uni-app-doc/7fbf26a0-4f4a-11eb-b680-7980c8a877b8.png',
+						name: '匆匆',
+						author: 'zjh',
+						src: 'http://img.zjhwork.xyz/%E5%8C%86%E5%8C%86%E9%82%A3%E5%B9%B4.aac',
+					},
+					{
+						poster: 'https://bjetxgzv.cdn.bspapp.com/VKCEYUGU-uni-app-doc/7fbf26a0-4f4a-11eb-b680-7980c8a877b8.png',
+						name: '豆',
+						author: 'zjh',
+						src: 'http://img.zjhwork.xyz/%E7%BA%A2%E8%B1%86.aac',
+					}
+				],
 				increaseAmount: 0,
 				reduceAmount: 0,
 				dateNum: "",
-				dateFormatCN: "",
+				dateFormatYear: "",
+				dateFormatMonth: "",
 				dateStr: "",
 				products: [{
 						title: "阳光沙滩趴~",
@@ -235,19 +367,28 @@
 			this.loadWalletRecords(this.formatterDate(new Date()));
 		},
 		methods: {
+			countPlus: function() {
+				this.count += 1;
+			},
 			initDate: function() {
 				this.dateStr = this.formatterDate(new Date());
-				this.dateFormatCN = this.formatDateCN(new Date());
+				this.dateFormatYear = this.formatDateCN(new Date(), 'y');
+				this.dateFormatMonth = this.formatDateCN(new Date(), 'm');
 				this.dateNum = new Date().getDate();
 			},
-			formatDateCN: function(date) {
+			formatDateCN: function(date, type) {
 				const year = date.getFullYear();
 				const month = this.parseMonthOrDay(date.getMonth() + 1);
 				const day = this.parseMonthOrDay(date.getDate());
-				return year + "年" + month + "月";
+				if (type == 'y') {
+					return year;
+				}
+				if (type == 'm') {
+					return month;
+				}
+				return year + "-" + month + "-" + day;
 			},
 			confirm: function(e) {
-				console.log(e)
 				this.date = e.fulldate
 				this.loadWalletRecords(e.fulldate)
 				this.dateNum = e.date
@@ -315,6 +456,7 @@
 				if (res.index == 2) {
 					this.$refs.showRight.open();
 				}
+
 			},
 			loadMyProfile: function() {
 				uni.request({
@@ -402,6 +544,11 @@
 	* {
 		padding: 0;
 		margin: 0;
+		font-family: system-ui;
+	}
+
+	view {
+		color: #141414;
 	}
 
 	.center {
@@ -464,5 +611,38 @@
 		width: 200px;
 		margin-left: 20px;
 		font-size: 20px;
+	}
+
+	.dialog {
+		position: relative;
+		margin-top: 50px;
+		margin-left: 50px;
+		padding-left: 20px;
+		width: 300px;
+		line-height: 2;
+		border: 1px solid #D8D8D8;
+		color: #555555;
+		border-radius: 4px;
+	}
+
+	.dialog::before {
+		content: '';
+		position: absolute;
+		border: 8px solid;
+		border-color: transparent #D8D8D8 transparent transparent;
+		left: -16px;
+		top: 8px;
+	}
+
+	.image-dialog {
+		font-size: 13px;
+	}
+
+	.image-dialog::before {
+		content: '欢迎回来,今天也要继续加油哦';
+		position: absolute;
+		top: 11px;
+		left: 22px;
+
 	}
 </style>
