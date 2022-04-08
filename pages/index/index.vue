@@ -82,11 +82,11 @@
 
 				</view>
 				<image
-					style="position: absolute;margin-top: 18px;width: 20px;height: 20px;margin-left: 10%;cursor: pointer;"
+					style="position: absolute;margin-top: 14px;width: 20px;height: 20px;margin-left: 10%;cursor: pointer;"
 					@click="closeMall" src="../../static/back.png" mode=""></image>
 				<view class="center" style="margin: 0 auto;width: 80%;margin-left: 60px;">
 					<uni-search-bar style="" @confirm="search" radius="15" cancelButton="auto" :focus="true"
-						v-model="pageInfo.product.keywords" @cancel="cancel" @clear="clear">
+						v-model="pageInfo.product.keywords" @cancel="clear" @clear="clear">
 					</uni-search-bar>
 				</view>
 				<scroll-view style="height: 100%;max-height: 600px;overflow-y:scroll ;" scroll-y="true">
@@ -130,14 +130,22 @@
 							<view class="" style="text-align: center;">
 								<text v-text="'确认购买「'+currentProduct.productName+'」吗?'"></text>
 							</view>
-							<view class="" style="margin-top: 10px;">
+							<view class="" style="margin-top: 10%;">
+								<view class="" @click="subtractQuantity" style="cursor: pointer;line-height: 38px;margin-left: 5%;float: left;font-size: 22px;font-weight: 800;">
+									<text>-</text>
+								</view>
 								<input class="input" v-model="currentQuantity" @input="calculatePrice"
-									style="margin-left: 10%;width: 50px;float: left;" type="number" placeholder="件数" />
-								<view class="" style="color: #E43D33;margin-left: 30%;float: left;font-size: 23px;line-height: 40px;">
+									style="margin-left: 5%;width: 30px;float: left;" type="number" placeholder="" />
+									<view class="" @click="plusQuantity" style="line-height: 38px;margin-left: 5%;float: left;font-size: 22px;font-weight: 800;">
+										<text>+</text>
+									</view>
+								<view  class=""  style="cursor: pointer;color: #E43D33;margin-left: 20%;float: left;font-size: 23px;line-height: 40px;">
 									<text v-text="'¥ '+calculatedPrices"></text>
 								</view>
 							</view>
 							<view class="" style="clear: both;">
+								</view>
+								<view class="" style="margin-top: 10%;">
 								<button style="margin-top: 10px;" type="default" @click="summitOrder">确认购买</button>
 							</view>
 
@@ -385,7 +393,7 @@
 					}
 				},
 				currentProduct: {},
-				currentQuantity: 0,
+				currentQuantity: 1,
 				calculatedPrices: 0
 			}
 		},
@@ -401,6 +409,17 @@
 			this.loadProducts(page.page, page.size, page.type, page.keywords);
 		},
 		methods: {
+			subtractQuantity: function(){
+				if(this.currentQuantity == 1){
+					return;
+				}
+				this.currentQuantity--;
+				this.calculatePrice()
+			},
+			plusQuantity: function(){
+				this.currentQuantity++;
+				this.calculatePrice()
+			},
 			summitOrder: function(){
 				uni.request({
 					url: "http://zjhwork.xyz:9998/user-orders",
@@ -446,6 +465,7 @@
 			clear: function(e) {
 				let page = this.pageInfo.product;
 				page.keywords = "";
+				this.loadProducts(page.page, page.size, page.type, page.keywords);
 			},
 			search: function(e) {
 				let page = this.pageInfo.product;
@@ -546,7 +566,7 @@
 			buy: function(res) {
 				this.currentProduct = res
 				this.$refs.buyPop.open('top')
-
+				this.calculatePrice()
 			},
 			openCalendar: function(e) {
 				this.$refs.calendar.open()

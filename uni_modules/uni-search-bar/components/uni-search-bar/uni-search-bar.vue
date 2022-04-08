@@ -215,7 +215,7 @@ s<template>
 </script>
 
 <style lang="scss" scoped>
-	$uni-searchbar-height: 36px;
+	$uni-searchbar-height: 27px;
 
 	.uni-searchbar {
 		/* #ifndef APP-NVUE */
