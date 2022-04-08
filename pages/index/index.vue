@@ -78,30 +78,40 @@
 				</scroll-view>
 			</uni-drawer>
 			<uni-drawer ref="showRight" mode="right" :width="400">
-				<image style="margin-top: 30px;width: 20px;height: 20px;margin-left: 10%;cursor: pointer;"
-					@click="closeMall" src="../../static/back.png" mode=""></image>
-				<view class="center" style="margin: 0 auto;width: 80%;">
-					<text style="font-size: 30px;font-weight: 800;">Integral Mall</text>
+				<view class="" style="margin-top: 15px;">
+
 				</view>
-				<scroll-view style="height: 100%;max-height: 400px;overflow-y:scroll ;" scroll-y="true">
+				<image
+					style="position: absolute;margin-top: 18px;width: 20px;height: 20px;margin-left: 10%;cursor: pointer;"
+					@click="closeMall" src="../../static/back.png" mode=""></image>
+				<view class="center" style="margin: 0 auto;width: 80%;margin-left: 60px;">
+					<uni-search-bar style="" @confirm="search" radius="15" cancelButton="auto" :focus="true"
+						v-model="pageInfo.product.keywords" @cancel="cancel" @clear="clear">
+					</uni-search-bar>
+				</view>
+				<scroll-view style="height: 100%;max-height: 600px;overflow-y:scroll ;" scroll-y="true">
 					<view class="" style="width: 100%;">
 
 						<view class="" style="padding: 10%;">
 							<view class="center product" v-for="(item, i) in products" style="">
+								<view class="" style="margin-top: 20px;">
+									
+								</view>
 								<image :src="item.image" style="width: 70px;height: 70px;"></image>
 								<view class="" style="padding: 2%;">
-									<text v-text="item.title" style="font-size: 10px;font-weight: 400;"></text>
+									<text v-text="item.productName" style="font-size: 10px;font-weight: 400;"></text>
 								</view>
 								<view class="">
-									<text v-text="item.description" style="font-size: 6px;color: #C8C7CC;"></text>
+									<text v-text="item.productDescription"
+										style="font-size: 6px;color: #C8C7CC;"></text>
 								</view>
 								<view class="" style="clear: all;margin-top: 20px;">
 									<view class=""
 										style="margin-left: 5%;float: left;width: 40%;height: 30px;font-size: 15px;color: #E43D33;">
-										<text v-text="item.price+'¥'"></text>
+										<text v-text="'¥'+item.price"></text>
 									</view>
 									<view class="" style="width: 40%;height: 30px;float: left;margin-left: 13%;">
-										<image @click="buy" style="cursor: pointer;width: 30px;height: 30px;"
+										<image @click="buy(item)" style="cursor: pointer;width: 30px;height: 30px;"
 											src="http://cdn.zjhwork.xyz/vsfileserver/10e629179c6c4544a3bb96648a6ab1b9.png">
 										</image>
 									</view>
@@ -110,6 +120,30 @@
 						</view>
 					</view>
 				</scroll-view>
+				<view class="" style="width: 80%;margin: 0 auto;">
+					<uni-pagination :pageSize="pageInfo.product.size" :current="pageInfo.product.page"
+						:total="pageInfo.product.total" title="" @change="changePage" />
+				</view>
+				<uni-popup ref="buyPop" type="bottom">
+					<view class="" style="padding: 15px;margin-left: 15%;width: 80%;margin: 0 auto;margin-top: 50%;">
+						<uni-card>
+							<view class="" style="text-align: center;">
+								<text v-text="'确认购买「'+currentProduct.productName+'」吗?'"></text>
+							</view>
+							<view class="" style="margin-top: 10px;">
+								<input class="input" v-model="currentQuantity" @input="calculatePrice"
+									style="margin-left: 10%;width: 50px;float: left;" type="number" placeholder="件数" />
+								<view class="" style="color: #E43D33;margin-left: 30%;float: left;font-size: 23px;line-height: 40px;">
+									<text v-text="'¥ '+calculatedPrices"></text>
+								</view>
+							</view>
+							<view class="" style="clear: both;">
+								<button style="margin-top: 10px;" type="default" @click="summitOrder">确认购买</button>
+							</view>
+
+						</uni-card>
+					</view>
+				</uni-popup>
 			</uni-drawer>
 
 			<view class="" style="">
@@ -142,7 +176,7 @@
 									<text style="font-size: 14px;color: #b0b0b0;">累计获得</text>
 								</view>
 								<view style="margin-top: 5px;">
-									<text v-text="walletInfo.amount.toFixed(2)"></text>
+									<text v-text="walletInfo.totalRewardsAmount.toFixed(2)"></text>
 								</view>
 							</view>
 							<view class="" style="margin-top: 20px;">
@@ -199,7 +233,8 @@
 							<view class="" style="margin-right: 5%;">
 								<view style=""></view>
 								<view class="" v-for="(item,i) in walletRecords" style="font-size: 15px;">
-									<view class="" v-if="item.type == 'PLUS'" style="margin-top: 5%;border-bottom: 0.5px #F1F1F1 solid;">
+									<view class="" v-if="item.type == 'PLUS'"
+										style="margin-top: 5%;border-bottom: 0.5px #F1F1F1 solid;">
 										<view class="" style="width: 96%;">
 
 										</view>
@@ -208,7 +243,8 @@
 											<view class="">
 												<text v-text="item.taskName+item.causeBy"></text>
 											</view>
-											<view class="" style="font-size: 11px;margin-top: 5%;margin-left: 4%;margin-bottom: 5px;">
+											<view class=""
+												style="font-size: 11px;margin-top: 5%;margin-left: 4%;margin-bottom: 5px;">
 												<text v-text="new Date(item.createTime).toLocaleString()"></text>
 											</view>
 										</view>
@@ -222,7 +258,8 @@
 
 										</view>
 									</view>
-									<view class="" v-if="item.type == 'SUBTRACT'" style="border-bottom: 0.5px #F1F1F1 solid;margin-top: 5%;">
+									<view class="" v-if="item.type == 'SUBTRACT'"
+										style="border-bottom: 0.5px #F1F1F1 solid;margin-top: 5%;">
 										<view class="" style="width: 96%;">
 
 										</view>
@@ -231,7 +268,8 @@
 											<view class="">
 												<text v-text="item.taskName+item.causeBy"></text>
 											</view>
-											<view class="" style="font-size: 11px;margin-top: 5%;margin-left: 4%;margin-bottom: 5px;">
+											<view class=""
+												style="font-size: 11px;margin-top: 5%;margin-left: 4%;margin-bottom: 5px;">
 												<text v-text="new Date(item.createTime).toLocaleString()"></text>
 											</view>
 										</view>
@@ -252,10 +290,10 @@
 					</scroll-view>
 					<uni-calendar ref="calendar" :insert="false" :clearDate="false" @confirm="confirm"></uni-calendar>
 				</uni-drawer>
-				
+
 			</view>
 		</view>
-		
+
 	</view>
 </template>
 
@@ -307,29 +345,11 @@
 				dateFormatMonth: "",
 				dateStr: "",
 				products: [{
-						title: "阳光沙滩趴~",
-						description: "把猪头埋在沙子里",
-						image: "http://cdn.zjhwork.xyz/vsfileserver/04d3e0b4c3f248ac96cca33f450bf104.png",
-						price: 2999.99
-					},
-					{
-						title: "巴颜喀拉山,我们来啦~",
-						description: "让我们瞧瞧黄河发源地!",
-						image: "http://cdn.zjhwork.xyz/vsfileserver/0a338a2179174168ae99f66509cc5ec5.png",
-						price: 3999.99
-					}, {
-						title: "滑雪,skr~",
-						description: "来场单板大比拼",
-						image: "http://cdn.zjhwork.xyz/vsfileserver/1d211a6046114af8a45899da9798632b.png",
-						price: 1999.99
-					},
-					{
-						title: "来一场浪漫的电影约会吧!~",
-						description: "movie! movie! movie!",
-						image: "http://cdn.zjhwork.xyz/vsfileserver/bc34615d0d4642e9b327fb0befa32343.png",
-						price: 999.99
-					}
-				],
+					title: "阳光沙滩趴~",
+					description: "把猪头埋在沙子里",
+					image: "http://cdn.zjhwork.xyz/vsfileserver/04d3e0b4c3f248ac96cca33f450bf104.png",
+					price: 2999.99
+				}],
 				fabArr: [{
 					text: "MyProfile",
 					iconPath: "http://cdn.zjhwork.xyz/vsfileserver/50dda7ff5c5342bf810f0d4790bb7565.png"
@@ -354,7 +374,19 @@
 					status: "123123",
 					type: "123123123",
 					amount: 0
-				}]
+				}],
+				pageInfo: {
+					product: {
+						total: 0,
+						page: 1,
+						size: 10,
+						type: "FOOD",
+						keywords: ""
+					}
+				},
+				currentProduct: {},
+				currentQuantity: 0,
+				calculatedPrices: 0
 			}
 		},
 		onLoad() {
@@ -365,8 +397,86 @@
 			this.loadWallet();
 			this.initDate();
 			this.loadWalletRecords(this.formatterDate(new Date()));
+			let page = this.pageInfo.product;
+			this.loadProducts(page.page, page.size, page.type, page.keywords);
 		},
 		methods: {
+			summitOrder: function(){
+				uni.request({
+					url: "http://zjhwork.xyz:9998/user-orders",
+					method: "POST",
+					header: {
+						'Authorization': this.token
+					},
+					data: {
+						"quantity": this.currentQuantity,
+						"productId": this.currentProduct.id,
+						"price": this.calculatedPrices
+					},
+					success: (res) => {
+						uni.showToast({
+							title: '购买成功~!',
+							icon:"success"
+						});
+						this.$refs.buyPop.close()
+					}
+				});	
+			},
+			calculatePrice: function(e) {
+				if (this.currentQuantity == 0) {
+					this.calculatedPrices = 0;
+					return;
+				}
+				uni.request({
+					url: "http://zjhwork.xyz:9998/products/calculations",
+					method: "POST",
+					header: {
+						'Authorization': this.token
+					},
+					data: {
+						"quantity": this.currentQuantity,
+						"id": this.currentProduct.id
+					},
+					success: (res) => {
+						this.calculatedPrices = res.data
+					}
+				});
+
+			},
+			clear: function(e) {
+				let page = this.pageInfo.product;
+				page.keywords = "";
+			},
+			search: function(e) {
+				let page = this.pageInfo.product;
+				page.keywords = e.value;
+				this.loadProducts(page.page, page.size, page.type, page.keywords);
+			},
+			changePage: function(e) {
+				let page = this.pageInfo.product;
+				if (e.type == "next") {
+					page.page += 1;
+				} else {
+					page.page -= 1;
+				}
+
+				this.loadProducts(page.page, page.size, page.type, page.keywords);
+			},
+			loadProducts: function(page, size, type, keywords) {
+				uni.request({
+					url: "http://zjhwork.xyz:9998/products?page=" + page + "&size=" + size + "&type=" + type
+						.trim() + "&keywords=" + keywords,
+					header: {
+						'Authorization': this.token
+					},
+					success: (res) => {
+						this.products = [];
+						this.products = res.data.data;
+						this.pageInfo.product.total = res.data.total;
+					}
+				});
+
+			},
 			countPlus: function() {
 				this.count += 1;
 			},
@@ -434,10 +544,9 @@
 
 			},
 			buy: function(res) {
-				uni.showToast({
-					title: "养猪人还没做完~别着急",
-					icon: 'none'
-				})
+				this.currentProduct = res
+				this.$refs.buyPop.open('top')
+
 			},
 			openCalendar: function(e) {
 				this.$refs.calendar.open()
@@ -452,6 +561,7 @@
 				}
 				if (res.index == 1) {
 					this.$refs.showTop.open();
+					this.loadWalletRecords(this.formatterDate(new Date()));
 				}
 				if (res.index == 2) {
 					this.$refs.showRight.open();
@@ -644,5 +754,18 @@
 		top: 11px;
 		left: 22px;
 
+	}
+
+	.input {
+		border: none;
+		background-color: #FFFFFF;
+		padding-left: 20px;
+		border-radius: 5px;
+		width: 180px;
+		height: 40px;
+		text-align: left;
+		margin: 0 auto;
+		// color: #DCDFE6;
+		box-shadow: #DCDFE6 1px 1px 10px;
 	}
 </style>
