@@ -564,6 +564,7 @@
 
 			},
 			buy: function(res) {
+				this.currentQuantity = 1
 				this.currentProduct = res
 				this.$refs.buyPop.open('top')
 				this.calculatePrice()
