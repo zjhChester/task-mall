@@ -32,7 +32,7 @@
 					</view>
 					<view class="" style="width: 10%;float: left;">
 						<view class="" style="color: #fadf85;font-weight: 800;font-size: 16px;">
-							<text v-text="'+'+item.amount.toFixed(2)"></text>
+							<text v-text="'+'+Number(item.amount).toFixed(2)"></text>
 						</view>
 						<view class="" style="margin-top: 13%;">
 							<button type="primary"
@@ -85,73 +85,102 @@
 					style="position: absolute;margin-top: 14px;width: 20px;height: 20px;margin-left: 10%;cursor: pointer;"
 					@click="closeMall" src="../../static/back.png" mode=""></image>
 				<view class="center" style="margin: 0 auto;width: 80%;margin-left: 60px;">
-					<uni-search-bar style="" @confirm="search" radius="15" cancelButton="auto" :focus="true"
+					<uni-search-bar style="" @confirm="search" radius="15" cancelButton="auto" :focus="false"
 						v-model="pageInfo.product.keywords" @cancel="clear" @clear="clear">
 					</uni-search-bar>
 				</view>
-				<scroll-view style="height: 100%;max-height: 600px;overflow-y:scroll ;" scroll-y="true">
-					<view class="" style="width: 100%;">
-
-						<view class="" style="padding: 10%;">
-							<view class="center product" v-for="(item, i) in products" style="">
-								<view class="" style="margin-top: 20px;">
+				<view class="" style="background-color: #f3f3f3;margin-top: 5%;padding-top: 20px;padding-bottom: 20px;">
+					<view class="">
+						<view class="" style="width: 22%;margin-left: 12%;float: left;">
+							<text @click="clickGoodsNav(1)" :class="activeIndex==1 ? 'goods_nav_actived':'goods_nav' ">零食</text>
+						</view>
+						<view  style="width: 22%;margin: 0 auto;float: left;">
+							<text @click="clickGoodsNav(2)" :class="activeIndex==2 ? 'goods_nav_actived':'goods_nav' ">旅行</text>
+						</view>
+						<view class="" style="width: 22%;margin: 0 auto;float: left;">
+							<text @click="clickGoodsNav(3)" :class="activeIndex==3 ? 'goods_nav_actived':'goods_nav' ">娱乐</text>
+						</view>
+						<view class="" style="width: 22%;margin: 0 auto;float: left;">
+							<text @click="clickGoodsNav(4)" :class="activeIndex==4 ? 'goods_nav_actived':'goods_nav' ">日用</text>
+						</view>
+					</view>
+					<view class="" style="clear: both;">
+						
+					</view>
+					<scroll-view style="height: 100%;max-height: 600px;min-height: 600px;overflow-y:scroll ;padding-top: 5%;" scroll-y="true">
+						<view class="" style="width: 100%;">
+					
+							<view class="" style="padding: 10px;">
+								<view class="center" style="margin-top: 50%;" v-if="products.length == 0">
+									<view class="">
+										<text>很抱歉未找到相关商品~\n\n联系饲养员添加叭!</text>
+									</view>
+								</view>
+								<view v-if="products.length != 0" class="product" v-for="(item, i) in products" style="background-color: #FFFFFF;">
+									
+									<image :src="item.image" style="width: 100%;height: 100px;border-radius: 10px;"></image>
+									<view class="" style="text-indent: 10px;">
+										<text v-text="item.productName" style="font-size: 14px;font-weight: 400;"></text>
+									</view>
+									<view class="" style="text-indent: 8px;">
+										<text v-text="item.productDescription"
+											style="font-size: 6px;color: #C8C7CC;"></text>
+									</view>
+									<uni-tag style="margin: 0 2px;" size="mini" :text="tag.value"  type="primary" :circle="false" v-for="(tag, index) in item.tags"></uni-tag>
+									<view class="" style="clear: all;margin-top: 20px;">
+										<view class=""
+											style="margin-left: 7%;float: left;width: 40%;height: 30px;font-size: 15px;color: #E43D33;">
+											<text v-text="'¥'+item.price"></text>
+										</view>
+										<view class="" style="width: 40%;height: 30px;float: left;margin-left: 13%;">
+											<image @click="buy(item)" style="cursor: pointer;width: 30px;height: 30px;"
+												src="http://cdn.zjhwork.xyz/vsfileserver/10e629179c6c4544a3bb96648a6ab1b9.png">
+											</image>
+										</view>
+									</view>
 									
 								</view>
-								<image :src="item.image" style="width: 70px;height: 70px;"></image>
-								<view class="" style="padding: 2%;">
-									<text v-text="item.productName" style="font-size: 10px;font-weight: 400;"></text>
-								</view>
-								<view class="">
-									<text v-text="item.productDescription"
-										style="font-size: 6px;color: #C8C7CC;"></text>
-								</view>
-								<view class="" style="clear: all;margin-top: 20px;">
-									<view class=""
-										style="margin-left: 5%;float: left;width: 40%;height: 30px;font-size: 15px;color: #E43D33;">
-										<text v-text="'¥'+item.price"></text>
-									</view>
-									<view class="" style="width: 40%;height: 30px;float: left;margin-left: 13%;">
-										<image @click="buy(item)" style="cursor: pointer;width: 30px;height: 30px;"
-											src="http://cdn.zjhwork.xyz/vsfileserver/10e629179c6c4544a3bb96648a6ab1b9.png">
-										</image>
-									</view>
+								<view class="" style="margin-top: 10px;">
+									
 								</view>
 							</view>
 						</view>
-					</view>
-				</scroll-view>
-				<view class="" style="width: 80%;margin: 0 auto;">
+					</scroll-view>
+					
+					<uni-popup ref="buyPop" type="bottom">
+						<view class="" style="padding: 15px;margin-left: 15%;width: 80%;margin: 0 auto;margin-top: 50%;">
+							<uni-card>
+								<view class="" style="text-align: center;">
+									<text v-text="'确认购买「'+currentProduct.productName+'」吗?'"></text>
+								</view>
+								<view class="" style="margin-top: 10%;">
+									<view class="" @click="subtractQuantity" style="cursor: pointer;line-height: 38px;margin-left: 5%;float: left;font-size: 22px;font-weight: 800;">
+										<text>-</text>
+									</view>
+									<input class="input" v-model="currentQuantity"  @input="calculatePrice"
+										style="margin-left: 5%;width: 30px;float: left;" type="number" placeholder="" />
+										<view class="" @click="plusQuantity" style="line-height: 38px;margin-left: 5%;float: left;font-size: 22px;font-weight: 800;">
+											<text>+</text>
+										</view>
+									<view  class=""  style="cursor: pointer;color: #E43D33;margin-left: 20%;float: left;font-size: 23px;line-height: 40px;">
+										<text v-text="'¥ '+Number(calculatedPrices).toFixed(2)"></text>
+									</view>
+								</view>
+								<view class="" style="clear: both;">
+									</view>
+									<view class="" style="margin-top: 10%;">
+									<button style="margin-top: 10px;" type="default" @click="summitOrder">确认购买</button>
+								</view>
+					
+							</uni-card>
+						</view>
+					</uni-popup>
+					
+				</view>
+				<view class="" style="width: 80%;margin: 0 auto;margin-top: 5%;">
 					<uni-pagination :pageSize="pageInfo.product.size" :current="pageInfo.product.page"
 						:total="pageInfo.product.total" title="" @change="changePage" />
 				</view>
-				<uni-popup ref="buyPop" type="bottom">
-					<view class="" style="padding: 15px;margin-left: 15%;width: 80%;margin: 0 auto;margin-top: 50%;">
-						<uni-card>
-							<view class="" style="text-align: center;">
-								<text v-text="'确认购买「'+currentProduct.productName+'」吗?'"></text>
-							</view>
-							<view class="" style="margin-top: 10%;">
-								<view class="" @click="subtractQuantity" style="cursor: pointer;line-height: 38px;margin-left: 5%;float: left;font-size: 22px;font-weight: 800;">
-									<text>-</text>
-								</view>
-								<input class="input" v-model="currentQuantity" @input="calculatePrice"
-									style="margin-left: 5%;width: 30px;float: left;" type="number" placeholder="" />
-									<view class="" @click="plusQuantity" style="line-height: 38px;margin-left: 5%;float: left;font-size: 22px;font-weight: 800;">
-										<text>+</text>
-									</view>
-								<view  class=""  style="cursor: pointer;color: #E43D33;margin-left: 20%;float: left;font-size: 23px;line-height: 40px;">
-									<text v-text="'¥ '+calculatedPrices"></text>
-								</view>
-							</view>
-							<view class="" style="clear: both;">
-								</view>
-								<view class="" style="margin-top: 10%;">
-								<button style="margin-top: 10px;" type="default" @click="summitOrder">确认购买</button>
-							</view>
-
-						</uni-card>
-					</view>
-				</uni-popup>
 			</uni-drawer>
 
 			<view class="" style="">
@@ -184,7 +213,7 @@
 									<text style="font-size: 14px;color: #b0b0b0;">累计获得</text>
 								</view>
 								<view style="margin-top: 5px;">
-									<text v-text="walletInfo.totalRewardsAmount.toFixed(2)"></text>
+									<text v-text="Number(walletInfo.totalRewardsAmount).toFixed(2)"></text>
 								</view>
 							</view>
 							<view class="" style="margin-top: 20px;">
@@ -192,7 +221,7 @@
 									<text style="font-size: 14px;color: #b0b0b0;">今日获得</text>
 								</view>
 								<view style="margin-top: 5px;">
-									<text v-text="increaseAmount.toFixed(2)"></text>
+									<text v-text="Number(increaseAmount).toFixed(2)"></text>
 								</view>
 							</view>
 						</view>
@@ -202,7 +231,7 @@
 									<text style="font-size: 14px;color: #b0b0b0;">余额</text>
 								</view>
 								<view style="color: #f4cb45;margin-top: 5px;">
-									<text v-text="walletInfo.amount.toFixed(2)"></text>
+									<text v-text="Number(walletInfo.amount).toFixed(2)"></text>
 								</view>
 							</view>
 
@@ -211,7 +240,7 @@
 									<text style="font-size: 14px;color: #b0b0b0;">今日扣除</text>
 								</view>
 								<view style="margin-top: 5px;">
-									<text v-text="reduceAmount.toFixed(2)"></text>
+									<text v-text="Number(reduceAmount).toFixed(2)"></text>
 								</view>
 							</view>
 
@@ -259,7 +288,7 @@
 										<view class=""
 											style="float: left;width: 5%;margin-top: 8%;font-weight: 600;font-size: 15px;">
 											<view class="" style="color: #f4cb45;">
-												<text v-text="'+'+item.amount.toFixed(2)"></text>
+												<text v-text="'+'+Number(item.amount).toFixed(2)"></text>
 											</view>
 										</view>
 										<view class="" style="clear: both;">
@@ -284,7 +313,7 @@
 										<view class=""
 											style="float: left;width: 5%;margin-top: 8%;font-weight: 600;font-size: 15px;">
 											<view class="" style="color: #ea4035;">
-												<text v-text="'-'+item.amount.toFixed(2)"></text>
+												<text v-text="'-'+Number(item.amount).toFixed(2)"></text>
 											</view>
 										</view>
 										<view class="" style="clear: both;">
@@ -315,37 +344,7 @@
 		data() {
 			return {
 				count: 1,
-				audios: [{
-						poster: 'https://bjetxgzv.cdn.bspapp.com/VKCEYUGU-uni-app-doc/7fbf26a0-4f4a-11eb-b680-7980c8a877b8.png',
-						name: '冒险',
-						author: 'zjh',
-						src: 'http://img.zjhwork.xyz/%E9%82%A3%E4%BA%9B%E4%BD%A0%E5%BE%88%E5%86%92%E9%99%A9%E7%9A%84%E6%A2%A6.aac',
-					},
-					{
-						poster: 'https://bjetxgzv.cdn.bspapp.com/VKCEYUGU-uni-app-doc/7fbf26a0-4f4a-11eb-b680-7980c8a877b8.png',
-						name: '🦙',
-						author: 'zjh',
-						src: 'http://img.zjhwork.xyz/%E7%99%BD%E7%BE%8A.aac',
-					},
-					{
-						poster: 'https://bjetxgzv.cdn.bspapp.com/VKCEYUGU-uni-app-doc/7fbf26a0-4f4a-11eb-b680-7980c8a877b8.png',
-						name: '❤️',
-						author: 'zjh',
-						src: 'http://img.zjhwork.xyz/%E6%85%A2%E6%85%A2%E5%96%9C%E6%AC%A2%E4%BD%A0.aac',
-					},
-					{
-						poster: 'https://bjetxgzv.cdn.bspapp.com/VKCEYUGU-uni-app-doc/7fbf26a0-4f4a-11eb-b680-7980c8a877b8.png',
-						name: '匆匆',
-						author: 'zjh',
-						src: 'http://img.zjhwork.xyz/%E5%8C%86%E5%8C%86%E9%82%A3%E5%B9%B4.aac',
-					},
-					{
-						poster: 'https://bjetxgzv.cdn.bspapp.com/VKCEYUGU-uni-app-doc/7fbf26a0-4f4a-11eb-b680-7980c8a877b8.png',
-						name: '豆',
-						author: 'zjh',
-						src: 'http://img.zjhwork.xyz/%E7%BA%A2%E8%B1%86.aac',
-					}
-				],
+				audios: [],
 				increaseAmount: 0,
 				reduceAmount: 0,
 				dateNum: "",
@@ -394,7 +393,8 @@
 				},
 				currentProduct: {},
 				currentQuantity: 1,
-				calculatedPrices: 0
+				calculatedPrices: 0,
+				activeIndex: 1
 			}
 		},
 		onLoad() {
@@ -405,22 +405,60 @@
 			this.loadWallet();
 			this.initDate();
 			this.loadWalletRecords(this.formatterDate(new Date()));
-			let page = this.pageInfo.product;
-			this.loadProducts(page.page, page.size, page.type, page.keywords);
+			this.loadingPage()
+			this.loadingSongs()
+			
 		},
 		methods: {
+			loadingSongs: function(){
+				uni.request({
+					url:"http://zjhwork.xyz:9998/keymaps/current-version?key=taskMallSongs",
+					method:'GET',
+					success: (res) => {
+						this.audios = JSON.parse(res.data.jsonValue)
+					}
+				})	
+			},
+			loadingPage: function(){
+				let page = this.pageInfo.product;
+				this.loadProducts(page.page, page.size, page.type, page.keywords);	
+			},
+			clickGoodsNav: function(index){
+				this.activeIndex = index;
+				let page = this.pageInfo.product;
+				if(index == 1){
+					page.type = "FOOD";
+				}
+				if(index == 2){
+					page.type = "TRAVEL";
+				}
+				if(index == 3){
+					page.type = "ENTERTAINMENT";
+				}
+				if(index == 4){
+					page.type = "DAILY";
+				}
+				this.loadingPage();
+			},
 			subtractQuantity: function(){
 				if(this.currentQuantity == 1){
 					return;
 				}
 				this.currentQuantity--;
-				this.calculatePrice()
+				this.calculatePrice();
 			},
 			plusQuantity: function(){
 				this.currentQuantity++;
 				this.calculatePrice()
 			},
 			summitOrder: function(){
+				if (this.currentQuantity == 0) {
+					uni.showToast({
+						title:"购买数量必须大于0",
+						icon:'error'
+					})
+					return;
+				}
 				uni.request({
 					url: "http://zjhwork.xyz:9998/user-orders",
 					method: "POST",
@@ -443,7 +481,10 @@
 			},
 			calculatePrice: function(e) {
 				if (this.currentQuantity == 0) {
-					this.calculatedPrices = 0;
+					uni.showToast({
+						title:"购买数量必须大于0",
+						icon:'error'
+					})
 					return;
 				}
 				uni.request({
@@ -483,6 +524,7 @@
 				this.loadProducts(page.page, page.size, page.type, page.keywords);
 			},
 			loadProducts: function(page, size, type, keywords) {
+				uni.showLoading()
 				uni.request({
 					url: "http://zjhwork.xyz:9998/products?page=" + page + "&size=" + size + "&type=" + type
 						.trim() + "&keywords=" + keywords,
@@ -490,6 +532,7 @@
 						'Authorization': this.token
 					},
 					success: (res) => {
+						uni.hideLoading()
 						this.products = [];
 						this.products = res.data.data;
 						this.pageInfo.product.total = res.data.total;
@@ -662,7 +705,7 @@
 						'Authorization': this.token
 					},
 					success: (res) => {
-						this.wallet = res.data.amount.toFixed(2);
+						this.wallet = Number(res.data.amount).toFixed(2);
 						this.walletInfo = res.data;
 					}
 				})
@@ -694,10 +737,11 @@
 		width: 40%;
 		height: 200px;
 		margin-left: 8%;
-		margin-top: 10%;
+		/* margin-top: 5%; */
+		margin-bottom: 5%;
 		/* border: #DCDFE6 0.5px solid; */
 		border-radius: 10%;
-		box-shadow: #C7C7C7 5px 5px 20px;
+		box-shadow: #C7C7C7 1px 1px 5px;
 		float: left;
 	}
 
@@ -788,5 +832,16 @@
 		margin: 0 auto;
 		// color: #DCDFE6;
 		box-shadow: #DCDFE6 1px 1px 10px;
+	}
+	.goods_nav{
+		cursor: pointer;
+		padding-bottom: 10px;
+	}
+	.goods_nav_actived{
+		transition-duration: 0.5s;
+		cursor: pointer;
+		color: #3d84f4;
+		padding-bottom: 10px;
+		border-bottom: #3d84f4 2px solid;
 	}
 </style>
