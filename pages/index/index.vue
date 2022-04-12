@@ -116,31 +116,65 @@
 										<text>很抱歉未找到相关商品~\n\n联系饲养员添加叭!</text>
 									</view>
 								</view>
-								<view v-if="products.length != 0" class="product" v-for="(item, i) in products" style="background-color: #FFFFFF;">
+								<view v-if="products.length != 0" >
 									
-									<image :src="item.image" style="width: 100%;height: 100px;border-radius: 10px;"></image>
-									<view class="" style="text-indent: 10px;">
-										<text v-text="item.productName" style="font-size: 14px;font-weight: 400;"></text>
-									</view>
-									<view class="" style="text-indent: 8px;">
-										<text v-text="item.productDescription"
-											style="font-size: 6px;color: #C8C7CC;"></text>
-									</view>
-									<uni-tag style="margin: 0 2px;" size="mini" :text="tag.value"  type="primary" :circle="false" v-for="(tag, index) in item.tags"></uni-tag>
-									<view class="" style="clear: all;margin-top: 20px;">
-										<view class=""
-											style="margin-left: 7%;float: left;width: 40%;height: 30px;font-size: 15px;color: #E43D33;">
-											<text v-text="'¥'+item.price"></text>
+									<view class="" style="margin-left: 5%;width: 45%;float: left;">
+										<view class="product" v-for="(item, i) in productsLeft" style="background-color: #FFFFFF;clear: both;">
+											<image :src="item.image" style="width: 100%;height: 150px;border-radius: 10px;"></image>
+											<view class="" style="text-indent: 10px;">
+												<text v-text="item.productName" style="font-size: 14px;font-weight: 400;"></text>
+											</view>
+											<view class="" style="text-indent: 8px;">
+												<text v-text="item.productDescription"
+													style="font-size: 6px;color: #C8C7CC;"></text>
+											</view>
+											<uni-tag style="margin: 0 2px;margin-left: 5px; margin-top: 1px;box-shadow: #C8C7CC 1px 1px 20px;" size="mini" :text="tag.value"  :type="index==0?'warning':index%2==0?'primary':'success'" :circle="true" v-for="(tag, index) in item.tags"></uni-tag>
+											<view class="" style="margin-top: 20px;">
+												<view class=""
+													style="margin-left: 12%;float: left;width: 40%;height: 30px;font-size: 15px;color: #E43D33;">
+													<text v-text="'¥'+item.price"></text>
+												</view>
+												<view class="" style="width: 40%;height: 30px;float: left;margin-left: 10px;">
+													<image @click="buy(item)" style="cursor: pointer;width: 30px;height: 30px;"
+														src="http://cdn.zjhwork.xyz/vsfileserver/10e629179c6c4544a3bb96648a6ab1b9.png">
+													</image>
+												</view>
+												<view class="" style="clear: both;">
+													
+												</view>
+											</view>
 										</view>
-										<view class="" style="width: 40%;height: 30px;float: left;margin-left: 13%;">
-											<image @click="buy(item)" style="cursor: pointer;width: 30px;height: 30px;"
-												src="http://cdn.zjhwork.xyz/vsfileserver/10e629179c6c4544a3bb96648a6ab1b9.png">
-											</image>
+									</view>
+									<view class="" style="margin-left: 2.5%;width: 45%;float: left;">
+										<view class="product" v-for="(item, i) in productsRight" style="background-color: #FFFFFF;clear: both;">
+											<image :src="item.image" style="width: 100%;height: 150px;border-radius: 10px;"></image>
+											<view class="" style="text-indent: 10px;">
+												<text v-text="item.productName" style="font-size: 14px;font-weight: 400;"></text>
+											</view>
+											<view class="" style="text-indent: 8px;">
+												<text v-text="item.productDescription"
+													style="font-size: 6px;color: #C8C7CC;"></text>
+											</view>
+											<uni-tag style="margin: 0 2px;margin-top: 10px;" size="mini" :text="tag.value"  :type="index==0?'warning':index%2==0?'primary':'success'" :circle="true" v-for="(tag, index) in item.tags"></uni-tag>
+											<view class="" style="clear: all;margin-top: 20px;">
+												<view class=""
+													style="margin-left: 12%;float: left;width: 40%;height: 30px;font-size: 15px;color: #E43D33;">
+													<text v-text="'¥'+item.price"></text>
+												</view>
+												<view class="" style="width: 40%;height: 30px;float: left;margin-left: 10px;">
+													<image @click="buy(item)" style="cursor: pointer;width: 30px;height: 30px;"
+														src="http://cdn.zjhwork.xyz/vsfileserver/10e629179c6c4544a3bb96648a6ab1b9.png">
+													</image>
+												</view>
+											</view>
+											<view class="" style="clear: both;">
+												
+											</view>
 										</view>
 									</view>
 									
 								</view>
-								<view class="" style="margin-top: 10px;">
+								<view class="" style="margin-top: 10px;clear: both;">
 									
 								</view>
 							</view>
@@ -357,6 +391,8 @@
 					image: "http://cdn.zjhwork.xyz/vsfileserver/04d3e0b4c3f248ac96cca33f450bf104.png",
 					price: 2999.99
 				}],
+				productsLeft:[],
+				productsRight:[],
 				fabArr: [{
 					text: "MyProfile",
 					iconPath: "http://cdn.zjhwork.xyz/vsfileserver/50dda7ff5c5342bf810f0d4790bb7565.png"
@@ -471,11 +507,19 @@
 						"price": this.calculatedPrices
 					},
 					success: (res) => {
-						uni.showToast({
-							title: '购买成功~!',
-							icon:"success"
-						});
-						this.$refs.buyPop.close()
+						if(res.statusCode == 200){
+							uni.showToast({
+								title: '购买成功~!',
+								icon:"success"
+							});
+							this.$refs.buyPop.close()
+						}else{
+							uni.showToast({
+								title: '订单创建失败,请联系管理员!'+res.data.message,
+								icon:"error"
+							});
+						}
+						
 					}
 				});	
 			},
@@ -534,8 +578,17 @@
 					success: (res) => {
 						uni.hideLoading()
 						this.products = [];
+						this.productsLeft = [];
+						this.productsRight = [];
 						this.products = res.data.data;
 						this.pageInfo.product.total = res.data.total;
+						this.products.forEach((item,index)=> {
+							if(index %2 == 0){
+								this.productsLeft.push(item)
+							}else{
+								this.productsRight.push(item)
+							}
+						})
 					}
 				});
 
@@ -626,6 +679,7 @@
 				if (res.index == 1) {
 					this.$refs.showTop.open();
 					this.loadWalletRecords(this.formatterDate(new Date()));
+					this.loadWallet();
 				}
 				if (res.index == 2) {
 					this.$refs.showRight.open();
@@ -734,15 +788,11 @@
 	}
 
 	.product {
-		width: 40%;
-		height: 200px;
-		margin-left: 8%;
-		/* margin-top: 5%; */
+		width: 100%;
 		margin-bottom: 5%;
-		/* border: #DCDFE6 0.5px solid; */
 		border-radius: 10%;
 		box-shadow: #C7C7C7 1px 1px 5px;
-		float: left;
+		/* float: left; */
 	}
 
 	.border {
